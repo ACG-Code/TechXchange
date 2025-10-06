@@ -1,0 +1,52 @@
+{
+	"@type":"Process",
+	"Name":"}System - Git Export Attributes",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"}System - Git Export Attributes.ti",
+	"DataSource":
+	{
+		"Type":"TM1CubeView",
+		"dataSourceNameForServer":"}ElementAttributes_ACG-STD-Account",
+		"dataSourceNameForClient":"}ElementAttributes_ACG-STD-Account",
+		"view":"Temp"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pDimension",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pDirectory",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":
+	[
+		{
+			"Name":"V1",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"V2",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vValue",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

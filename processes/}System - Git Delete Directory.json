@@ -1,0 +1,20 @@
+{
+	"@type":"Process",
+	"Name":"}System - Git Delete Directory",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"}System - Git Delete Directory.ti",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pDirectory",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

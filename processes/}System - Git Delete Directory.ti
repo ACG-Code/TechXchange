@@ -1,0 +1,15 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Git Delete Directory
+# Purpose: Remove Directory used for Git Uploads
+# Date Created: 2025.05.06 (ACGI)
+# Last Update: 2025.05.06
+# Notes: 
+#     2025.05.06 (ACGI) - Initial Process Creation
+#EndRegion
+
+sDir = pDirectory;
+ASCIIDelete (sDir);
+
+#endregion

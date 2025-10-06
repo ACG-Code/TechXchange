@@ -1,0 +1,2 @@
+['}model_control':'}model_control':'PA SaaS PAW URL'] = S: TRIM(DB('}Model_Control', 'PA SaaS Base URL', 'String') | 'api/' | DB('}Model_Control', 'Tenant ID', 'String') | '/v0');
+['}model_control':'}model_control':'PA SaaS Model Base URL'] = S: TRIM(DB('}Model_Control', 'PA SaaS PAW URL', 'String') | '/tm1/' | DB('}Model_Control', 'Model Name', 'String')| '/api/v1');

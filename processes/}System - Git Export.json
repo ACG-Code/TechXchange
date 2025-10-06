@@ -1,0 +1,12 @@
+{
+	"@type":"Process",
+	"Name":"}System - Git Export",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"}System - Git Export.ti",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

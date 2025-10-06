@@ -1,0 +1,101 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Git Import Attributes
+# Purpose: Import Attribute vValues from Git Pull
+# Date Created: 2025.09.19 (ACGI)
+# Last Update: 2025.09.19
+# Notes: 
+#     2025.09.19 (ACGI) - Initial Process Creation
+#EndRegion
+ 
+#Region --------------- Constants ---------------
+cLogProc = 'PLOG';
+cProc = GetProcessName;
+cUser = NumberToString(DIMIX('}Clients', TM1USER));
+cTimestamp = TIMST(now, '\Y\m\d\h\i\s');
+cRandomInt = NumberToString(INT(RAND() * 1005));
+cView = '%cProc%.%cUser%.%cTimestamp%.%cRandomInt%';
+cTemp = 1;
+#EndRegion
+ 
+#Region --------------- Initialize Logging ---------------
+ExecuteProcess(cLogProc, 'pFlag', 'INIT', 'pProc', cProc);
+#EndRegion
+ 
+#Region --------------- Error Handling ---------------
+nError = 0;
+
+IF(pDir @= '');
+    nError = 1;
+    sMessage = 'pDir not supplied';
+ELSE;
+    sMessage = 'pDir= "' | pDir | '"';
+ENDIF;
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', sMessage, 'pLjne', 'P01');
+
+IF(pFile @= '');
+    nError = 1;
+    sMessage = 'pFile not supplied';
+ELSE;
+    sMessage = 'pFile= "' | pFile | '"';
+ENDIF;
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', sMessage, 'pLjne', 'P02');
+
+IF(nError = 1);
+	ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Critical errors, exiting');
+	ProcessBreak;
+ENDIF;
+#EndRegion
+ 
+#Region --------------- Variables ---------------
+sView = EXPAND(cView);
+nDataHdr = 0;
+nData = 0;
+nDimLastCharacter = SCAN('.csv', pFile) - 1;
+sDim = SUBST(pFile, 1, nDimLastCharacter);
+sAttrDim = '}ElementAttributes_' | sDim;
+#EndRegion
+ 
+DatasourceNameForServer = pDir | pFile;
+
+#endregion
+#region Data
+
+IF(nDataHdr = 0);
+	ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Beginning Data');
+	nDataHdr = 1;
+ENDIF;
+
+IF(vType @= 'AA');
+   IF(DIMIX(sAttrDim, vAttribute) = 0);
+       ATTRINSERT(sDim, '', vAttribute ,'A');
+   ENDIF;
+   ATTRPUTS(vValue, sDim, vElement, vAttribute);
+ELSEIF(vType @= 'AS');
+   IF(DIMIX(sAttrDim, vAttribute) = 0);
+       ATTRINSERT(sDim, '', vAttribute ,'S');
+   ENDIF;
+   ATTRPUTS (vValue, sDim, vElement, vAttribute);
+ELSEIF(vType @= 'AN');
+   IF(DIMIX(sAttrDim, vAttribute) = 0);
+       ATTRINSERT(sDim, '', vAttribute ,'N');
+   ENDIF;
+   ATTRPUTN(StringToNumber(vValue), sDim, vElement, vAttribute);
+ENDIF;
+
+nData = nData + 1;
+
+#endregion
+#region Epilog
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Beginning Epilog');
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Data records processed: ' | NumberToString(nData));
+  
+sStatus = IF(nError = 1, 'ERROR', 'SUCCESS');
+ExecuteProcess(cLogProc, 'pFlag', 'END', 'pProc', cProc, 'pMSG', sStatus);
+
+#endregion

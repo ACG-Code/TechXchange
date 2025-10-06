@@ -1,0 +1,67 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Get Import
+# Purpose: Import Data from Git Pull
+# Date Created: 2025.09.19 (ACGI)
+# Last Update: 2025.09.19
+# Notes: 
+#     2025.09.19 (ACGI) - Initial Process Creation
+#EndRegion
+ 
+#Region --------------- Constants ---------------
+cLogProc = 'PLOG';
+cProc = GetProcessName;
+cUser = NumberToString(DIMIX('}Clients', TM1USER));
+cTimestamp = TIMST(now, '\Y\m\d\h\i\s');
+cRandomInt = NumberToString(INT(RAND() * 1005));
+cView = '%cProc%.%cUser%.%cTimestamp%.%cRandomInt%';
+cTemp = 1;
+#EndRegion
+ 
+#Region --------------- Initialize Logging ---------------
+ExecuteProcess(cLogProc, 'pFlag', 'INIT', 'pProc', cProc);
+#EndRegion
+ 
+#Region --------------- Error Handling ---------------
+nError = 0;
+ 
+IF(nError = 1);
+	ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Critical errors, exiting');
+	ProcessBreak;
+ENDIF;
+#EndRegion
+ 
+#Region --------------- Variables ---------------
+sView = EXPAND(cView);
+sGitDirectory = '/GIT/';
+sAttributeExportFile = sGitDirectory | 'Attributes/';
+sDataExportFile      = sGitDirectory | 'Cubes/';
+#EndRegion
+ 
+sFile = WildcardFileSearch ( sAttributeExportFile | '*', '' );
+WHILE ( sFile @<> '');
+  ExecuteProcess ( '}System - Git Import Attributes', 'pFile', sFile, 'pDir', sAttributeExportFile );
+  sFile = WildcardFileSearch (  sAttributeExportFile | '*', sFile );
+END;
+
+sFile = WildcardFileSearch ( sDataExportFile | '/*', '' );
+WHILE ( sFile @<> '' );
+  ExecuteProcess ( '}System - Git Import Data', 'pFile', sFile, 'pDir', sDataExportFile );
+  sFile = WildcardFileSearch (  sDataExportFile | '/*', sFile );
+END;
+
+#endregion
+#region Epilog
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Beginning Epilog');
+
+ExecuteProcess ( '}System - Git Delete Directory', 'pDeleteDir', sGitDirectory );
+  
+sStatus = IF(nError = 1, 'ERROR', 'SUCCESS');
+ExecuteProcess(cLogProc, 'pFlag', 'END', 'pProc', cProc, 'pMSG', sStatus);
+
+
+
+
+#endregion

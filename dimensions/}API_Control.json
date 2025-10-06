@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"}API_Control",
+	"Hierarchies@Code.links":
+	[
+		"}API_Control.hierarchies/}API_Control.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('}API_Control')/Hierarchies('}API_Control')"
+	}
+}

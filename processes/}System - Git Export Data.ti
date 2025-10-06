@@ -1,0 +1,109 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Git Export Data
+# Purpose: Export Cube Data for Git upload
+# Date Created: 2025.05.06 (ACGI)
+# Last Update: 2025.05.06
+# Notes: 
+#     2025.05.06 (ACGI) - Initial Process Creation
+#EndRegion
+ 
+#Region --------------- Constants ---------------
+cProc = GetProcessName;
+cUser = NumberToString(DIMIX('}Clients', TM1USER));
+cTimestamp = TIMST(now, '\Y\m\d\h\i\s');
+cRandomInt = NumberToString(INT(RAND() * 1005));
+cView = '%cProc%.%cUser%.%cTimestamp%.%cRandomInt%';
+cFile = pDirectory | pCube | '.csv';
+cTemp = 1;
+#EndRegion
+  
+#Region --------------- Error Handling ---------------
+nError = 0;
+
+IF(CubeExists(pCube) = 0);
+    nError = 1;
+ELSE;
+    cDimCount = CubeDimensionCountGet(pCube);
+ENDIF;
+
+IF(nError = 1);
+	ProcessBreak;
+ENDIF;
+#EndRegion
+ 
+#Region --------------- Variables ---------------
+sView = EXPAND(cView);
+#EndRegion
+ 
+#Region --------------- Source View ---------------
+IF(ViewExists(pCube, sView) = 1);
+	ViewDestroy(pCube, sView);
+ENDIF;
+ViewCreate(pCube, sView, cTemp);
+ViewExtractSkipZeroesSet(pCube, sView, 1);
+ViewExtractSkipCalcsSet(pCube, sView, 1);
+ViewExtractSkipRuleValuesSet(pCube, sView, 1);
+ 
+nLoop = 1;
+nMax = CubeDimensionCountGet(pCube);
+ 
+WHILE(nLoop <= nMax);
+	sDim = TABDIM(pCube, nLoop);
+ 
+	IF(SubsetExists(sDim, sView) = 1);
+		SubsetDeleteAllElements(sDim, sView);
+	ELSE;
+		SubsetCreate(sDim, sView, cTemp);
+ENDIF;
+	ViewSubsetAssign(pCube, sView, sDim, sView);
+ 
+	sMDX = '{Tm1FILTERBYLEVEL({TM1SUBSETALL([' | sDim | '])}, 0)}';
+    SubsetMDXSet(sDim, sView, sMDX);
+    SubsetMDXSet(sDim, sView, '');
+ 
+	nLoop = nLoop + 1;
+END;
+#EndRegion
+
+DatasourceType = 'VIEW';
+DatasourceNameForServer = pCube;
+DatasourceCubeView = sView;
+
+#endregion
+#region Data
+
+IF(cDimCount = 2);
+    ASCIIOutput(cFile, V1, V2, V3);
+ELSEIF(cDimCount = 3);
+    ASCIIOutput(cFile, V1, V2, V3, V4);
+ELSEIF(cDimCount = 4);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5);
+ELSEIF(cDimCount = 5);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6);
+ELSEIF(cDimCount = 6);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7);
+ELSEIF(cDimCount = 7);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8);
+ELSEIF(cDimCount = 8);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9);
+ELSEIF(cDimCount = 9);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10);
+ELSEIF(cDimCount = 10);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11);
+ELSEIF(cDimCount = 11);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12);
+ELSEIF(cDimCount = 12);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13);
+ELSEIF(cDimCount = 13);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14);
+ELSEIF(cDimCount = 14);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15);
+ELSEIF(cDimCount = 15);
+    ASCIIOutput(cFile, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10, V11, V12, V13, V14, V15, V16);
+ELSE;
+    ItemSkip;
+ENDIF;
+
+#endregion

@@ -1,0 +1,78 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Git Export Attributes
+# Purpose: Export Attribute Values for Git Upload
+# Date Created: 2025.05.06 (ACGI)
+# Last Update: 2025.05.06
+# Notes: 
+#     2025.05.06 (ACGI) - Initial Process Creation
+#EndRegion
+ 
+#Region --------------- Constants ---------------
+cCube = '}ElementAttributes_' | pDimension;
+cTimeStamp = TIMST(now, '\Y\m\d\h\i\s');
+cUser = NumberToString(DIMIX('}Clients', TM1User()));
+cRandomInt = NumberToString(INT(RAND * 1005));
+cView = '%cCube%.%cUser%.%cTimestamp%.%cRandomInt%';
+cFile = pDirectory | pDimension | '.csv';
+cTemp = 1;
+#EndRegion
+
+#Region --------------- Error Handling ---------------
+nError = 0;
+
+IF(CubeExists(cCube) = 0);
+    nError = 1;
+ENDIF;
+
+IF(nError = 1);
+    ProcessBreak;
+ENDIF;
+#EndRegion
+
+#Region --------------- Variables ---------------
+sView = EXPAND(cView);
+#EndRegion
+
+#Region --------------- Source View ---------------
+IF(ViewExists(cCube, sView) = 1);
+	ViewDestroy(cCube, sView);
+ENDIF;
+ViewCreate(cCube, sView, cTemp);
+ViewExtractSkipZeroesSet(cCube, sView, 1);
+ViewExtractSkipCalcsSet(cCube, sView, 0);
+ViewExtractSkipRuleValuesSet(cCube, sView, 0);
+ 
+nLoop = 1;
+nMax = CubeDimensionCountGet(cCube);
+ 
+WHILE(nLoop <= nMax);
+	sDim = TABDIM(cCube, nLoop);
+ 
+	IF(SubsetExists(sDim, sView) = 1);
+		SubsetDeleteAllElements(sDim, sView);
+	ELSE;
+		SubsetCreate(sDim, sView, cTemp);
+ENDIF;
+	ViewSubsetAssign(cCube, sView, sDim, sView);
+ 
+	sMDX = '{TM1SUBSETALL([' | sDim | '])}';
+    SubsetMDXSet(sDim, sView, sMDX);
+    SubsetMDXSet(sDim, sView, '');
+ 
+	nLoop = nLoop + 1;
+END;
+#EndRegion
+
+DatasourceType = 'VIEW';
+DatasourceNameForServer = cCube;
+DatasourceCubeView = sView;
+
+#endregion
+#region Data
+
+sAttrType = DTYPE(cCube, v2);
+ASCIIOutput(cFile, sAttrType, V1, V2, vValue);
+
+#endregion

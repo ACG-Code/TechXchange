@@ -1,0 +1,28 @@
+{
+	"@type":"Hierarchy",
+	"Name":"}API_Control",
+	"Elements":
+	[
+		{
+			"Name":"Code",
+			"Type":"String"
+		},
+		{
+			"Name":"Client_ID",
+			"Type":"String"
+		},
+		{
+			"Name":"Tenant_ID",
+			"Type":"String"
+		},
+		{
+			"Name":"Redirect_URI",
+			"Type":"String"
+		},
+		{
+			"Name":"Token",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

@@ -1,0 +1,208 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Git Import Data
+# Purpose: Import Data from Git Pull
+# Date Created: 2025.09.19 (ACGI)
+# Last Update: 2025.09.19
+# Notes: 
+#     2025.09.19 (ACGI) - Initial Process Creation
+#EndRegion
+ 
+#Region --------------- Constants ---------------
+cLogProc = 'PLOG';
+cProc = GetProcessName;
+cUser = NumberToString(DIMIX('}Clients', TM1USER));
+cTimestamp = TIMST(now, '\Y\m\d\h\i\s');
+cRandomInt = NumberToString(INT(RAND() * 1005));
+cView = '%cProc%.%cUser%.%cTimestamp%.%cRandomInt%';
+cTemp = 1;
+#EndRegion
+ 
+#Region --------------- Initialize Logging ---------------
+ExecuteProcess(cLogProc, 'pFlag', 'INIT', 'pProc', cProc);
+#EndRegion
+ 
+#Region --------------- Error Handling ---------------
+nError = 0;
+
+IF(pDir @= '');
+    nError = 1;
+    sMessage = 'pDir not supplied';
+ELSE;
+    sMessage = 'pDir= "' | pDir | '"';
+ENDIF;
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', sMessage, 'pLine', 'P01');
+
+IF(pFile @= '');
+    nError = 1;
+    sMessage = 'pFile not supplied';
+ELSE;
+    sMessage = 'pFile= "' | pFile | '"';
+ENDIF;
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', sMessage, 'pLine', 'P02');
+ 
+IF(nError = 1);
+	ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Critical errors, exiting');
+	ProcessBreak;
+ENDIF;
+#EndRegion
+ 
+#Region --------------- Variables ---------------
+sView = EXPAND(cView);
+nDimLastCharacter = SCAN ('.csv', pFile) - 1;
+sCube             = SUBST (pFile, 1, nDimLastCharacter);
+nLastDimIndex = CubeDimensionCountGet(sCube);
+sLastDim      = TABDIM(sCube, nLastDimIndex);
+nDataHdr = 0;
+nData = 0;
+#EndRegion
+ 
+DataSourceType          = 'CHARACTERDELIMITED';
+DatasourceNameForServer = pDir | pFile;
+
+#endregion
+#region Data
+
+IF(nDataHdr = 0);
+	ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Beginning Data');
+	nDataHdr = 1;
+ENDIF;
+
+IF (nLastDimIndex = 2);
+    IF (CELLISUPDATEABLE  (sCube, v1, v2) = 1);
+        IF (DTYPE (sLastDim , v2) @= 'N');
+            CELLPUTN (StringToNumber (v3), sCube, v1, v2);
+        ELSE;
+            CELLPUTS (v3, sCube, v1, v2);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 3);
+    IF (CELLISUPDATEABLE  (sCube, v1, v2, v3) = 1);
+        IF (DType (sLastDim , v3) @= 'N');
+            CELLPUTN (StringToNumber (v4), sCube, v1, v2, v3);
+        ELSE;
+            CELLPUTS (v4, sCube, v1, v2, v3);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 4);
+    IF (CELLISUPDATEABLE  (sCube, v1, v2, v3, v4) = 1);
+        IF (DTYPE (sLastDim , v4) @= 'N');
+            CELLPUTN (StringToNumber (v5), sCube, v1, v2, v3, v4);
+        ELSE;
+            CELLPUTS (v5, sCube, v1, v2, v3, v4);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 5);
+    IF (CELLISUPDATEABLE  (sCube, v1, v2, v3, v4, v5) = 1);
+        IF (DTYPE (sLastDim , v5) @= 'N');
+            CELLPUTN (StringToNumber (v6), sCube, v1, v2, v3, v4, v5);
+        ELSE;
+            CELLPUTS (v6, sCube, v1, v2, v3, v4, v5);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 6);
+    IF (CELLISUPDATEABLE  (sCube, v1, v2, v3, v4, v5, v6) = 1);
+        IF (DTYPE (sLastDim , v6) @= 'N');
+            CELLPUTN (StringToNumber (v7), sCube, v1, v2, v3, v4, v5, v6);
+        ELSE;
+            CELLPUTS (v7, sCube, v1, v2, v3, v4, v5, v6);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 7);
+    IF (CELLISUPDATEABLE  (sCube, v1, v2, v3, v4, v5, v6, v7) = 1);
+        IF (DTYPE (sLastDim , v7) @= 'N');
+            CELLPUTN (StringToNumber (v8), sCube, v1, v2, v3, v4, v5, v6, v7);
+        ELSE;
+            CELLPUTS (v8, sCube, v1, v2, v3, v4, v5, v6, v7);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 8);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8) = 1);
+        IF (DTYPE (sLastDim , v8) @= 'N');
+            CELLPUTN (StringToNumber (v9), sCube, v1, v2, v3, v4, v5, v6, v7, v8);
+        ELSE;
+            CELLPUTS (v9, sCube, v1, v2, v3, v4, v5, v6, v7, v8);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 9);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9) = 1);
+        IF (DTYPE (sLastDim , v9) @= 'N');
+            CELLPUTN (StringToNumber (v10), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+        ELSE;
+            CELLPUTS (v10, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 10);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) = 1);
+        IF (DTYPE (sLastDim , v10) @= 'N');
+            CELLPUTN (StringToNumber (v11), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10);
+        ELSE;
+            CELLPUTS (v11, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 11);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) = 1);
+        IF (DTYPE (sLastDim , v11) @= 'N');
+            CELLPUTN (StringToNumber (v12), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11);
+        ELSE;
+            CELLPUTS (v12, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 12);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) = 1);
+        IF (DTYPE (sLastDim , v12) @= 'N');
+            CELLPUTN (StringToNumber (v13), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12);
+        ELSE;
+            CELLPUTS (v13, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 13);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) = 1);
+        IF (DTYPE (sLastDim , v13) @= 'N');
+            CELLPUTN (StringToNumber (v14), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13);
+        ELSE;
+            CELLPUTS (v14, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 14);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14) = 1);
+        IF (DTYPE (sLastDim , v14) @= 'N');
+            CELLPUTN (StringToNumber (v15), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14);
+        ELSE;
+            CELLPUTS (v15, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 15);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15) = 1);
+        IF (DTYPE (sLastDim , v15) @= 'N');
+            CELLPUTN (StringToNumber (v16), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15);
+        ELSE;
+            CELLPUTS (v16, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15);
+        ENDIF;
+    ENDIF;
+ELSEIF (nLastDimIndex = 16);
+    IF (CELLISUPDATEABLE(sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16) = 1);
+        IF (DTYPE (sLastDim , v16) @= 'N');
+            CELLPUTN (StringToNumber (v17), sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16);
+        ELSE;
+            CELLPUTS (v17, sCube, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16);
+        ENDIF;
+    ENDIF;
+ENDIF;
+  
+nData = nData + 1;
+
+#endregion
+#region Epilog
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Beginning Epilog');
+
+ExecuteProcess(cLogProc, 'pFlag', 'MSG', 'pProc', cProc, 'pMSG', 'Data records processed: ' | NUmberToString(nData));
+  
+sStatus = IF(nError = 1, 'ERROR', 'SUCCESS');
+ExecuteProcess(cLogProc, 'pFlag', 'END', 'pProc', cProc, 'pMSG', sStatus);
+
+#endregion

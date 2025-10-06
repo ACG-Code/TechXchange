@@ -1,0 +1,46 @@
+#region Prolog
+
+#Region ############################################# HEADER #############################################
+# Process: System - Git Export
+# Purpose: Export job to be called by Git Uploads
+# Date Created: 2025.05.06 (ACGI)
+# Last Update: 2025.05.06
+# Notes: 
+#     2025.05.06 (ACGI) - Initial Process Creation
+#EndRegion
+
+#Region --------------- Constants ---------------
+cDir = '/GIT/';
+cAttrExportDir = cDir | 'Attributes/';
+cDataExportDir = cDir | 'Cubes/';
+#EndRegion
+
+#Region --------------- Cleanup ---------------
+ExecuteProcess( '}System - Git Delete Directory', 'pDirectory', cDir );
+#EndRegion
+
+#Region --------------- Attributes ---------------
+nLoop = 1;
+sDim = DIMNM('}Dimensions', nLoop);
+WHILE(sDim @<> '');
+    IF(CellGetS('}Git - Dimensions', sDim, 'Push') @= 'Yes');
+        ExecuteProcess('}System - Git Export Attributes', 'pDimension', sDim,	'pDirectory', cAttrExportDir );
+    ENDIF;
+    nLoop = nLoop + 1;
+    sDim = DIMNM('}Dimensions', nLoop);
+END;
+#EndRegion
+
+#Region --------------- Cubes ---------------
+nLoop = 1;
+sCube = DIMNM('}Cubes', nLoop);
+WHILE(sCube @<> '');
+    IF(CellGetS('}Git - Cubes', sCube, 'Push') @= 'Yes');
+        ExecuteProcess('}System - Git Export Data', 'pCube', sCube,	'pDirectory', cDataExportDir);
+    ENDIF;
+    nLoop = nLoop + 1;
+    sCube = DIMNM('}Cubes', nLoop);
+END;
+#EndRegion
+
+#endregion

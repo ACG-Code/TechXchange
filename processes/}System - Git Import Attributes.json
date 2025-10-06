@@ -1,0 +1,64 @@
+{
+	"@type":"Process",
+	"Name":"}System - Git Import Attributes",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"}System - Git Import Attributes.ti",
+	"DataSource":
+	{
+		"Type":"ASCII",
+		"dataSourceNameForServer":"GIT/Attributes/Fiscal Year.csv",
+		"dataSourceNameForClient":"GIT/Attributes/Fiscal Year.csv",
+		"asciiHeaderRecords":0,
+		"asciiQuoteCharacter":"\"",
+		"asciiDecimalSeparator":".",
+		"asciiThousandSeparator":",",
+		"asciiDelimiterType":"Character",
+		"asciiDelimiterChar":","
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pFile",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pDir",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":
+	[
+		{
+			"Name":"vType",
+			"Type":"String",
+			"Position":1,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vElement",
+			"Type":"String",
+			"Position":2,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vAttribute",
+			"Type":"String",
+			"Position":3,
+			"StartByte":0,
+			"EndByte":0
+		},
+		{
+			"Name":"vValue",
+			"Type":"String",
+			"Position":4,
+			"StartByte":0,
+			"EndByte":0
+		}
+	]
+}

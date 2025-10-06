@@ -1,0 +1,14 @@
+{
+	"@type":"Cube",
+	"Name":"}API Control",
+	"Dimensions":
+	[
+		{
+			"@id":"Dimensions('}API_Control')"
+		},
+		{
+			"@id":"Dimensions('}mAPI_Control')"
+		}
+	],
+	"Views@Code.links":[]
+}

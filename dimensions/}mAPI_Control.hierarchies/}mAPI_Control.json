@@ -1,0 +1,12 @@
+{
+	"@type":"Hierarchy",
+	"Name":"}mAPI_Control",
+	"Elements":
+	[
+		{
+			"Name":"Value",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

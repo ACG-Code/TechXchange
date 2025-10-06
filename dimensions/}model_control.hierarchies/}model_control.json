@@ -1,0 +1,32 @@
+{
+	"@type":"Hierarchy",
+	"Name":"}model_control",
+	"Elements":
+	[
+		{
+			"Name":"PA SaaS Base URL",
+			"Type":"String"
+		},
+		{
+			"Name":"Model Name",
+			"Type":"String"
+		},
+		{
+			"Name":"Tenant ID",
+			"Type":"String"
+		},
+		{
+			"Name":"PA SaaS PAW URL",
+			"Type":"String"
+		},
+		{
+			"Name":"PA SaaS Model Base URL",
+			"Type":"String"
+		},
+		{
+			"Name":"B4T API",
+			"Type":"String"
+		}
+	],
+	"Subsets@Code.links":[]
+}

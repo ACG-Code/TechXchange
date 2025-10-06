@@ -1,0 +1,12 @@
+{
+	"@type":"Dimension",
+	"Name":"}model_control",
+	"Hierarchies@Code.links":
+	[
+		"}model_control.hierarchies/}model_control.json"
+	],
+	"DefaultHierarchy":
+	{
+		"@id":"Dimensions('}model_control')/Hierarchies('}model_control')"
+	}
+}

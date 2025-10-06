@@ -1,2 +1,0 @@
-# TechXchange
-IBM TechXchange Samples
